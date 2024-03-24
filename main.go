@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 )
@@ -18,7 +19,23 @@ func main() {
 
 func status200Handler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Status 200 - OK\n")
+
+	// Get Ip from Here http://checkip.amazonaws.com
+	ip, err := http.Get("http://checkip.amazonaws.com")
+	if err != nil {
+		fmt.Println("Failed to get IP:", err)
+		return
+	}
+	defer ip.Body.Close()
+
+	ipAddress, err := ioutil.ReadAll(ip.Body)
+	if err != nil {
+		fmt.Println("Failed to read IP:", err)
+		return
+	}
+
+	fmt.Println("IP Address:", string(ipAddress))
+	fmt.Fprintf(w, "Status 200 - OK\n"+"IP Address: "+string(ipAddress)+"\n")
 }
 
 func status400Handler(w http.ResponseWriter, r *http.Request) {
