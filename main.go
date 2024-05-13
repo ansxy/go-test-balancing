@@ -18,9 +18,6 @@ func main() {
 	http.HandleFunc("/status/200", status200Handler)
 	http.HandleFunc("/status/400", status400Handler)
 	http.HandleFunc("/status/500", status500Handler)
-	scheduler := cron.New(cron.WithLocation(time.FixedZone("Asia/Jakarta", 7*60*60)))
-	Job(scheduler)
-	ListJobs(scheduler)
 	fmt.Println("Server listening on port 8080...")
 	http.ListenAndServe(":8080", nil)
 
